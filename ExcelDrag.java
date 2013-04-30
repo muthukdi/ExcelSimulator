@@ -20,7 +20,35 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 		drawShadedBox(g);
 		drawBox(g);
 	}
-	public void mousePressed(MouseEvent e) {}
+	public void mousePressed(MouseEvent e)
+	{
+		int x = e.getX();
+		int y = e.getY();
+		if (x < cellOriginX || x > cellOriginX + 5*boxWidth || y < cellOriginY || y > cellOriginY + 10*boxHeight)
+		{
+			System.out.println("Can't touch here!");
+		}
+		else
+		{
+			for (int i = 1; i < 6; i++)
+			{
+				if (x < cellOriginX + i*boxWidth)
+				{
+					startingCellX = i-1;
+					break;
+				}
+			}
+			for (int i = 1; i < 11; i++)
+			{
+				if (y < cellOriginY + i*boxHeight)
+				{
+					startingCellY = i-1;
+					break;
+				}
+			}
+		}
+		repaint();
+	}
 	public void mouseReleased(MouseEvent e) {}
 	public void mouseClicked(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
@@ -30,13 +58,13 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	public void drawBox(Graphics g)
 	{
 		g.setColor(new Color(0, 0, 0, 255));
-		g.drawRect(x, y, regionWidth*boxWidth, regionHeight*boxHeight);
-		g.drawRect(x+1, y+1, boxWidth-2, boxHeight-2);
+		g.drawRect(cellOriginX + startingCellX*boxWidth, cellOriginY + startingCellY*boxHeight, boxWidth, boxHeight);
+		g.drawRect(cellOriginX + startingCellX*boxWidth + 1, cellOriginY + startingCellY*boxHeight + 1, boxWidth-2, boxHeight-2);
 	}
 	public void drawShadedBox(Graphics g)
 	{
 		g.setColor(new Color(150, 150, 150, 50));
-		g.fillRect(x, y, boxWidth, boxHeight);
+		g.fillRect(cellOriginX + startingCellX*boxWidth, cellOriginY + startingCellY*boxHeight, boxWidth, boxHeight);
 	}
 	public void loadImage()
 	{
@@ -49,6 +77,7 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	public ExcelDrag()
 	{
 		JFrame frame = new JFrame("Excel Select/Drag Simulator");
+		addMouseListener(this);
 		loadImage();
 		boxWidth = 127;
 		boxHeight = 39;
