@@ -10,7 +10,7 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	BufferedImage image;
 	boolean dragging;
 	int boxWidth, boxHeight;
-	int cellOriginX, cellOriginY;				// in pixels (i.e. (250, 323))
+	int cellOriginX, cellOriginY;				// in pixels (i.e. (251, 323))
 	int startingCellX, startingCellY;			// in actual cell coordinates (i.e. (1,1) & (2,3))
 	int endingCellX, endingCellY;				// in actual cell coordinates (i.e. (1,1) & (2,3))
 	public void paintComponent(Graphics g)
