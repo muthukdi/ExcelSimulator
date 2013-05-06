@@ -20,6 +20,7 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	BufferedImage mouseArrow;
 	BufferedImage downArrow;
 	Clip introPrompt, tryPrompt;
+	JButton animationButton;
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
@@ -126,49 +127,69 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	}
 	public void actionPerformed(ActionEvent e)
 	{
-		int x = simulationMouseX;
-		int y = simulationMouseY;
-		if (selectionWidth > 3 || selectionHeight > 8)
+		Object source = e.getSource();
+		if (source == timer)
 		{
-			timer.stop();
-			animation = false;
+			int x = simulationMouseX;
+			int y = simulationMouseY;
+			if (selectionWidth > 3 || selectionHeight > 8)
+			{
+				timer.stop();
+				animation = false;
+				selectionWidth = 1;
+				selectionHeight = 1;
+				simulationMouseX = 243;
+				simulationMouseY = 329;
+				tryPrompt.setFramePosition(0);
+				tryPrompt.start();
+				JOptionPane.showMessageDialog(this, "Now, it's your turn!");
+				repaint();
+				return;
+			}
+			for (int i = 1; i < 6; i++)
+			{
+				if (x < cellOriginX + i*boxWidth)
+				{
+					selectionWidth = i-startingCellX;
+					if (selectionWidth < 1)
+					{
+						selectionWidth = 1;
+					}
+					break;
+				}
+			}
+			for (int i = 1; i < 11; i++)
+			{
+				if (y < cellOriginY + i*boxHeight)
+				{
+					selectionHeight = i-startingCellY;
+					if (selectionHeight < 1)
+					{
+						selectionHeight = 1;
+					}
+					break;
+				}
+			}
+			repaint();
+			simulationMouseX += 2;
+			simulationMouseY += 3;
+		}
+		else if (source == animationButton)
+		{
+			if (animation)
+			{
+				return;
+			}
+			startingCellX = 1;
+			startingCellY = 1;
 			selectionWidth = 1;
 			selectionHeight = 1;
+			dragging = false;
 			simulationMouseX = 243;
 			simulationMouseY = 329;
-			tryPrompt.setFramePosition(0);
-			tryPrompt.start();
-			JOptionPane.showMessageDialog(this, "Now, it's your turn!");
-			repaint();
-			return;
+			animation = true;
+			timer.start();
 		}
-		for (int i = 1; i < 6; i++)
-		{
-			if (x < cellOriginX + i*boxWidth)
-			{
-				selectionWidth = i-startingCellX;
-				if (selectionWidth < 1)
-				{
-					selectionWidth = 1;
-				}
-				break;
-			}
-		}
-		for (int i = 1; i < 11; i++)
-		{
-			if (y < cellOriginY + i*boxHeight)
-			{
-				selectionHeight = i-startingCellY;
-				if (selectionHeight < 1)
-				{
-					selectionHeight = 1;
-				}
-				break;
-			}
-		}
-		repaint();
-		simulationMouseX += 2;
-		simulationMouseY += 3;
 	}
 	public void drawBox(Graphics g)
 	{
@@ -209,6 +230,9 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 		simulationMouseX = 243;
 		simulationMouseY = 329;
 		timer = new Timer(25, this);
+		animationButton = new JButton("Play Animation!");
+		animationButton.addActionListener(this);
+		add(animationButton);
 		animation = true;
 		frame.setContentPane(this);
 		frame.setSize(698, 698);
