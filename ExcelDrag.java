@@ -19,7 +19,8 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	boolean animation;
 	BufferedImage mouseArrow;
 	BufferedImage downArrow;
-	Clip introPrompt, tryPrompt;
+	BufferedImage leftArrow;
+	Clip introPrompt, tryPrompt, successPrompt, failurePrompt;
 	JButton animationButton;
 	public void paintComponent(Graphics g)
 	{
@@ -34,6 +35,7 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 		else
 		{
 			g.drawImage(downArrow, 225, 270, null);
+			g.drawImage(leftArrow, cellOriginX + 4*boxWidth, cellOriginY + 7*boxHeight, null);
 		}
 	}
 	public void mousePressed(MouseEvent e)
@@ -76,6 +78,24 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	public void mouseReleased(MouseEvent e)
 	{
 		dragging = false;
+		if (selectionWidth == 3 && selectionHeight == 7 && startingCellX == 1 && startingCellY == 1)
+		{
+			successPrompt.setFramePosition(0);
+			successPrompt.start();
+			JOptionPane.showMessageDialog(this, "Lesson completed!");
+			System.exit(0);
+		}
+		else
+		{
+			failurePrompt.setFramePosition(0);
+			failurePrompt.start();
+			JOptionPane.showMessageDialog(this, "Sorry, try again!");
+			startingCellX = 1;
+			startingCellY = 1;
+			selectionWidth = 1;
+			selectionHeight = 1;
+			repaint();
+		}
 	}
 	public void mouseClicked(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
@@ -142,7 +162,7 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 				simulationMouseY = 329;
 				tryPrompt.setFramePosition(0);
 				tryPrompt.start();
-				JOptionPane.showMessageDialog(this, "Now, it's your turn!");
+				JOptionPane.showMessageDialog(this, "Select the cells between the two arrows.");
 				repaint();
 				return;
 			}
@@ -209,6 +229,7 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 			image = ImageIO.read(new File("ExcelDrag.png"));
 			mouseArrow = ImageIO.read(new File("mouseArrow.png"));
 			downArrow = ImageIO.read(new File("downArrow.png"));
+			leftArrow = ImageIO.read(new File("leftArrow.png"));
 		}
 		catch (IOException e) {}
 	}
@@ -247,6 +268,12 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 			stream = AudioSystem.getAudioInputStream(new File("tryPrompt.wav"));
             tryPrompt = AudioSystem.getClip();
             tryPrompt.open(stream);
+			stream = AudioSystem.getAudioInputStream(new File("tryPrompt.wav"));
+            successPrompt = AudioSystem.getClip();
+            successPrompt.open(stream);
+			stream = AudioSystem.getAudioInputStream(new File("tryPrompt.wav"));
+            failurePrompt = AudioSystem.getClip();
+            failurePrompt.open(stream);
         }
         catch (Exception e) {
             System.out.println("Unable to open sound file!");
