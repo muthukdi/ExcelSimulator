@@ -78,6 +78,10 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 					if (x < cellOriginX + i*boxWidth)
 					{
 						selectionWidth = i-startingCellX;
+						if (selectionWidth < 1)
+						{
+							selectionWidth = 1;
+						}
 						break;
 					}
 				}
@@ -86,6 +90,10 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 					if (y < cellOriginY + i*boxHeight)
 					{
 						selectionHeight = i-startingCellY;
+						if (selectionHeight < 1)
+						{
+							selectionHeight = 1;
+						}
 						break;
 					}
 				}
