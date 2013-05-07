@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 
-public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListener, ActionListener
+public class ExcelSimulator extends JPanel implements MouseListener, MouseMotionListener, ActionListener
 {
 	BufferedImage image;
 	boolean dragging;
@@ -226,16 +226,16 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	{
 		try
 		{
-			image = ImageIO.read(new File("ExcelDrag.png"));
+			image = ImageIO.read(new File("Excel.png"));
 			mouseArrow = ImageIO.read(new File("mouseArrow.png"));
 			downArrow = ImageIO.read(new File("downArrow.png"));
 			leftArrow = ImageIO.read(new File("leftArrow.png"));
 		}
 		catch (IOException e) {}
 	}
-	public ExcelDrag()
+	public ExcelSimulator()
 	{
-		JFrame frame = new JFrame("Excel Select/Drag Simulator");
+		JFrame frame = new JFrame("Excel Simulator");
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		loadImages();
@@ -265,13 +265,13 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
             AudioInputStream stream = AudioSystem.getAudioInputStream(new File("IntroPrompt.wav"));
             introPrompt = AudioSystem.getClip();
             introPrompt.open(stream);
-			stream = AudioSystem.getAudioInputStream(new File("tryPrompt.wav"));
+			stream = AudioSystem.getAudioInputStream(new File("TryPrompt.wav"));
             tryPrompt = AudioSystem.getClip();
             tryPrompt.open(stream);
-			stream = AudioSystem.getAudioInputStream(new File("tryPrompt.wav"));
+			stream = AudioSystem.getAudioInputStream(new File("SuccessPrompt.wav"));
             successPrompt = AudioSystem.getClip();
             successPrompt.open(stream);
-			stream = AudioSystem.getAudioInputStream(new File("tryPrompt.wav"));
+			stream = AudioSystem.getAudioInputStream(new File("FailurePrompt.wav"));
             failurePrompt = AudioSystem.getClip();
             failurePrompt.open(stream);
         }
@@ -285,6 +285,6 @@ public class ExcelDrag extends JPanel implements MouseListener, MouseMotionListe
 	}
 	public static void main(String[] args)
 	{
-		new ExcelDrag();
+		new ExcelSimulator();
 	}
 }
